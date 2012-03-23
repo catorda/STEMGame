@@ -33,6 +33,7 @@ public class HomeState extends BasicGameState
 	private Bunny bunny;
 	private BunnyGame game;
 	private NPC mom; 
+	private Image momImage; 
 	
     public int getId()
     {
@@ -48,6 +49,7 @@ public class HomeState extends BasicGameState
     	String up = "data/rabbit_back.bmp"; 			// only gets the file name strings instead of creating image
     	String down = "data/rabbit_forward.bmp";
     	String side = "data/rabbit_side.bmp";
+    	String momBmp = "data/lady_rabbit.bmp";
     	Color Transparent = (new Image(up)).getColor(0, 0);   // this gets the color from the top-left pixel so we know which color to make transparent
     	
     	bunny = new Bunny("bunny"); // create our bunny object
@@ -56,16 +58,16 @@ public class HomeState extends BasicGameState
     	bunny.setPosition(new Vector2f(x,y));
     	bunny.AddComponent(new ArrowKeyMovement("BunnyControl")); // add movement
     	bunny.AddComponent(new RenderComponent("BunnyRender")); // add render (almost like a toString, but not)
-    	
+    	bunny.AddComponent(new NPCInteraction("BunnyNPCControl"));
     	String[] momMessages = {"Hi", "Be careful out there!"}; 
-    	Rectangle momBounds = new Rectangle(766f, 638f, 75f, 75f); 
+    	Rectangle momBounds = new Rectangle(230f, 226f, 75f, 75f); 
     	mom = new NPC("mom", momMessages, momBounds);
-    	mom.setImages(side, side, side, Transparent); 
+    	mom.setImages(momBmp, momBmp, momBmp, Transparent); 
     	mom.setBlocked(homeMap);
     	mom.setPosition(new Vector2f(x,y));
     	mom.AddComponent(new RenderComponent("MomRender"));
-    	mom.setPosition(new Vector2f(766, 638));
-    	
+    	mom.setPosition(new Vector2f(220, 215));
+    	momImage = new Image(momBmp);
     	if(this.game.getLastStateId() == TrainingState.ID) {
     		this.x = 600; 
     		this.y = 275;
@@ -81,8 +83,7 @@ public class HomeState extends BasicGameState
 			throws SlickException {
 		homeMap.render(0,0); // homeMap is rendered first so it stays in the background
     	bunny.render(container, null, g); // bunny is second so it stays on top of homeMap
-    	mom.render(container, null, g);
-
+    	momImage.draw(mom.getPosition().x, mom.getPosition().y, (new Image("data/lady_rabbit.bmp")).getColor(0, 0));
 
 	}
 
@@ -97,7 +98,6 @@ public class HomeState extends BasicGameState
 	public void update(GameContainer container, StateBasedGame game, int delta)
 			throws SlickException {
 		bunny.update(container,null,delta);
-		mom.update(container, null, delta);
 		if(bunny.getPosition().x > 655) {
 			if(bunny.getPosition().y > 246 && bunny.getPosition().y < 311) {
 				this.x = 600; 
@@ -110,13 +110,22 @@ public class HomeState extends BasicGameState
 
 	
 	public class NPCInteraction extends Component {
+		
+		private String id;
+		
+		public NPCInteraction(String string) {
+			this.id = id;
+		}
 
 		@Override
 		public void update(GameContainer gc, StateBasedGame sb, int delta) {
 			Input input = gc.getInput();
+			input.disableKeyRepeat();
 			if (input.isKeyDown(Input.KEY_E)){
 				if(mom.isNear(bunny)) {
 					System.out.println(mom.getNextMessage());
+				} else {
+					System.out.println("not near");
 				}
 				
 			}

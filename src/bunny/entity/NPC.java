@@ -18,6 +18,9 @@ public class NPC extends Entity {
 	public String getNextMessage() {
 		int lastMessage = messageIndex; 
 		messageIndex++; 
+		if(messageIndex > messages.length - 1) {
+			messageIndex = 0;
+		}
 		return messages[lastMessage]; 
 	}
 	
@@ -31,12 +34,13 @@ public class NPC extends Entity {
 	
 	public boolean isNear(Entity ent) {
 		// if to the Right of NPC 
-		Rectangle nearBounds = new Rectangle(this.bounds.getX() - ent.getSprite().getWidth() - 5, 
-				this.bounds.getY() - ent.getSprite().getHeight() -5, 
-				this.bounds.getX() + (ent.getSprite().getWidth()*3) + 10, 
-				this.bounds.getY() + (ent.getSprite().getHeight()*3) + 10);
+		Rectangle nearBounds = new Rectangle(this.bounds.getX() - 75 - 5, 
+				this.bounds.getY() - 75 -5, 
+				this.bounds.getX() + (75*3) + 10, 
+				this.bounds.getY() + (75*3) + 10);
 		
 		if(nearBounds.contains(ent.getPosition().x, ent.getPosition().y)){
+			System.out.println(nearBounds.toString() + " || " + ent.getPosition().toString());
 			return true; 
 		} else { 
 			return false;
