@@ -1,12 +1,12 @@
 package bunny.state;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -14,18 +14,21 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.tiled.TiledMap;
 
+import bunny.component.Component;
 import bunny.component.movement.ArrowKeyMovement;
 import bunny.component.render.RenderComponent;
 import bunny.entity.Entity;
+import bunny.entity.NPC;
 import bunny.game.BunnyGame;
 
-public class HomeState extends BasicGameState
+public class HomeState extends BasicGameState 
 {
 	// ID for given state 
 	public static final int ID = 1; 
 	// game holding this state 
 	private BunnyGame game;
 	private TiledMap homeMap; 
+	private NPC mom; 
 	private float x = 75f, y = 450f; // used for bunny's initial position
 	private Entity bunny;
 	
@@ -50,6 +53,16 @@ public class HomeState extends BasicGameState
     	bunny.setBlocked(homeMap);
     	bunny.AddComponent(new ArrowKeyMovement("BunnyControl")); // add movement
     	bunny.AddComponent(new RenderComponent("BunnyRender")); // add render (almost like a toString, but not)
+    	
+    	String[] momMessages = {"Hi", "Be careful out there!"}; 
+    	Rectangle momBounds = new Rectangle(766f, 638f, 75f, 75f); 
+    	mom = new NPC("mom", momMessages, momBounds);
+    	mom.setImages(side, side, side, Transparent); 
+    	mom.setBlocked(homeMap);
+    	mom.AddComponent(new RenderComponent("MomRender"));
+    	mom.setPosition(new Vector2f(766, 638));
+
+    	
     	if(this.game.getLastStateId() == TrainingState.ID) {
     		this.x = 600; 
     		this.y = 275;
@@ -65,7 +78,7 @@ public class HomeState extends BasicGameState
 			throws SlickException {
 		homeMap.render(0,0); // homeMap is rendered first so it stays in the background
     	bunny.render(container, null, g); // bunny is second so it stays on top of homeMap
-    	System.out.println("ID: " + TrainingState.ID);
+    	mom.render(container, null, g);
 	}
 
 
@@ -79,6 +92,7 @@ public class HomeState extends BasicGameState
 	public void update(GameContainer container, StateBasedGame game, int delta)
 			throws SlickException {
 		bunny.update(container,null,delta);
+		mom.update(container, null, delta);
 		if(bunny.getPosition().x > 655) {
 			if(bunny.getPosition().y > 246 && bunny.getPosition().y < 311) {
 				this.x = 600; 
@@ -87,5 +101,21 @@ public class HomeState extends BasicGameState
 				game.enterState(TrainingState.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
 			}
 		}
+	}
+	
+	public class NPCInteraction extends Component {
+
+		@Override
+		public void update(GameContainer gc, StateBasedGame sb, int delta) {
+			Input input = gc.getInput();
+			if (input.isKeyDown(Input.KEY_E)){
+				if(mom.isNear(bunny)) {
+					System.out.println(mom.getNextMessage());
+				}
+				
+			}
+			
+		}
+		
 	}
 }

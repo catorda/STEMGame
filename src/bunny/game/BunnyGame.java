@@ -33,11 +33,12 @@ public class BunnyGame extends StateBasedGame
     public void initStatesList(GameContainer gc) 
 			throws SlickException 
 	{
-    	addState(new IntroSceneState());
+    	//addState(new IntroSceneState());
     	addState(new HomeState());
     	addState(new TrainingState());
     	
-    	lastStateId = IntroSceneState.ID;
+    	//lastStateId = IntroSceneState.ID;
+    	lastStateId = HomeState.ID;
     
 	}
  
