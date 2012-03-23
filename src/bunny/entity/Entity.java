@@ -95,7 +95,6 @@ public class Entity {
     {
         if(RenderComponent.class.isInstance(component))
             renderComponent = (RenderComponent)component;
- 
         component.setOwnerEntity(this);
         components.add(component);
     }

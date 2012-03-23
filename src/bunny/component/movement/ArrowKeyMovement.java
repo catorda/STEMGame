@@ -5,6 +5,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
  
+import bunny.entity.Entity;
 import bunny.entity.characters.Bunny;
 import bunny.game.Direction;
 import bunny.component.Component;
@@ -29,6 +30,12 @@ public class ArrowKeyMovement extends Component {
 	{
 		return direction;
 	}
+	
+	@Override
+	 public void setOwnerEntity(Entity owner)
+    {
+    	this.owner = (Bunny) owner;
+    }
 	
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta)
