@@ -19,6 +19,7 @@ import bunny.component.movement.ArrowKeyMovement;
 import bunny.component.render.RenderComponent;
 import bunny.entity.Entity;
 import bunny.entity.NPC;
+import bunny.entity.characters.Bunny;
 import bunny.game.BunnyGame;
 
 public class HomeState extends BasicGameState 
@@ -26,11 +27,12 @@ public class HomeState extends BasicGameState
 	// ID for given state 
 	public static final int ID = 1; 
 	// game holding this state 
-	private BunnyGame game;
+
 	private TiledMap homeMap; 
-	private NPC mom; 
 	private float x = 75f, y = 450f; // used for bunny's initial position
-	private Entity bunny;
+	private Bunny bunny;
+	private BunnyGame game;
+	private NPC mom; 
 	
     public int getId()
     {
@@ -42,13 +44,13 @@ public class HomeState extends BasicGameState
 			throws SlickException 
 	{
     	homeMap = new TiledMap("data/home_room.tmx");  // sets the homeMap from file.
-    	this.game = (BunnyGame) game; 
+    	this.game = game; 
     	String up = "data/rabbit_back.bmp"; 			// only gets the file name strings instead of creating image
     	String down = "data/rabbit_forward.bmp";
     	String side = "data/rabbit_side.bmp";
     	Color Transparent = (new Image(up)).getColor(0, 0);   // this gets the color from the top-left pixel so we know which color to make transparent
     	
-    	bunny = new Entity("bunny"); // create our bunny object
+    	bunny = new Bunny("bunny"); // create our bunny object
     	bunny.setImages(up, down, side, Transparent); // inside of setImages is where the actual image loading happens and we pass the color
     	bunny.setBlocked(homeMap);
     	bunny.AddComponent(new ArrowKeyMovement("BunnyControl")); // add movement
@@ -61,7 +63,6 @@ public class HomeState extends BasicGameState
     	mom.setBlocked(homeMap);
     	mom.AddComponent(new RenderComponent("MomRender"));
     	mom.setPosition(new Vector2f(766, 638));
-
     	
     	if(this.game.getLastStateId() == TrainingState.ID) {
     		this.x = 600; 
@@ -79,6 +80,8 @@ public class HomeState extends BasicGameState
 		homeMap.render(0,0); // homeMap is rendered first so it stays in the background
     	bunny.render(container, null, g); // bunny is second so it stays on top of homeMap
     	mom.render(container, null, g);
+
+
 	}
 
 
@@ -102,6 +105,7 @@ public class HomeState extends BasicGameState
 			}
 		}
 	}
+
 	
 	public class NPCInteraction extends Component {
 
@@ -118,4 +122,9 @@ public class HomeState extends BasicGameState
 		}
 		
 	}
+
+
 }
+
+
+

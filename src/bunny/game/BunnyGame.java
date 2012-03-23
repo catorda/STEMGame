@@ -4,14 +4,16 @@ package bunny.game;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
-
 import bunny.state.HomeState;
+import org.newdawn.slick.state.StateBasedGame;
 import bunny.state.IntroSceneState;
 import bunny.state.TrainingState;
  
 public class BunnyGame extends StateBasedGame
 {
+
 	private int lastStateId; 
 	private int width = 750; 
 	private int height = 600; 
